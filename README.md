@@ -313,3 +313,303 @@ This renders the `index.html` file that will be used to interact with the backen
 **Throws**
 
 - `403` if the user is not logged in
+
+
+## Freet
+```
+- creator: Freet → one User // a single user can author each Freet
+- created: Freet → one Time // when the Freet was created
+- original freet: Freet → lone Freet // there may be an original Freet associated with the Freet a user replies to or reposts
+```
+
+### API Routes
+
+For now, should be the same as existing routes from starter code.
+
+
+## User
+```
+- user: User → one Name // each user has a single display name / username
+- password: User → one Password // each user has a single password
+- content: User → set Item // for each user, the set of items that they have created
+```
+
+### API Routes
+
+For now, should be the same as existing routes from starter code.
+
+
+## Like [Item]
+```
+- who liked: Item → set User // for each item, set of users who liked the item
+- likes: User → set Item // for each user, the set of items that they liked
+```
+
+### API Routes
+
+#### ```GET /api/likes/?freetId``` - Gets the list of all users who liked the freet associated with ```freetId```
+
+**Returns**
+- An array of users who liked the freet associated with ```freetId```
+
+**Throws**
+- ```404``` if ```freetId``` is invalid
+
+#### ```POST /api/likes/?user/?freetId``` - Adds a new like from ```user``` to the freet associated with ```freetId```
+
+**Returns**
+- A success message
+- An array of users who liked the freet with ```user``` added to it
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```404``` if ```freetId``` is invalid
+
+#### ```DELETE /api/likes/?user/?freetId``` - Removes a like from ```user``` from the freet associated with ```freetId```
+
+**Returns**
+- A success message
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```404``` if ```freetId``` is invalid
+
+
+## Tag [Item]
+```
+- tag: one Name // the name of the tag
+- tags: Item → set Tag // for each item, the set of tags associated with that item
+- items: Tag → set Item // for each tag, the set of items associated with that tag
+```
+
+### API Routes
+
+#### ```PUT /api/freets/?freetId/?tag``` - Add tag ```tag``` to the freet associated with ```freetId```
+
+**Body**
+- ```tag``` _{string}_ - the tag being added to the freet
+
+**Returns**
+- A success message
+- An object with the Freet and any added tags ```tag```
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```tag``` is invalid
+
+#### ```DELETE /api/freets/?freetId/?tag``` - Remove tag ```tag``` to the freet associated with ```freetId```
+
+**Body**
+- ```tag``` _{string}_ - the tag being removed from the freet
+
+**Returns**
+- A success message
+- An object with the Freet and updated tags
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```tag``` isn't associated with ```freetId```
+
+
+## Filter [Item]
+```
+- filter: set Item // the set of items to filter for 
+- view: Filter → set Item // for each filter, set of items that can be viewed after filtering
+```
+
+### API Routes
+
+#### ```POST /api/filter``` - Creates a filter for certain tags or keywords
+
+**Body**
+- ```content``` _{string}_ - the set of keywords or tags to filter for
+
+**Returns**
+- A success message
+- An object with the tags/keywords in ```filter```
+
+#### ```GET /api/freets?show=filter``` - Shows all the freets associated with ```filter```
+
+**Returns**
+- An array of all freets with the keywords or tags of ```filter```
+
+#### ```GET /api/freets?block=filter``` - Shows only freets not associated with ```filter```
+
+**Returns**
+- An array of all freets without the keywords or tags of ```filter```
+
+
+## Circle
+```
+- creator: Circle → one User // a perspective can be created by a user
+- content: Circle → set Item // each circle has a set of items associated with that circle
+```
+
+### API Routes
+
+#### ```POST /api/circle``` - Creates a new circle
+
+**Body**
+- ```name``` _string_ - the name of the circle
+- ```permission``` _Permission_ - the viewing/writing permissions of the circle
+
+**Returns**
+- An object with the created circle
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```409``` if ```name``` already exists
+
+#### ```GET /api/circle/?circle``` - Gets all freets from ```circle```
+
+**Returns**
+- An array of freets that are in ```circleId```
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the circle
+- ```404``` if ```circle``` is invalid
+
+#### ```POST /api/circle/?circle/?freetId``` - Adds freet associated with ```freetId``` to the circle
+
+**Returns**
+- An object with the updated circle
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the circle
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```freetId``` is invalid
+- ```404``` if ```circle``` is invalid
+
+#### ```DELETE /api/circle/?circle/?freetId``` - Removes freet associated with ```freetId``` to the circle
+
+**Returns**
+- An object with the updated circle
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the circle
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```freetId``` is invalid
+- ```404``` if ```circle``` is invalid
+
+
+## Perspective
+```
+- owner: Perspective → one User // a perspective can be created by a user
+- content: Perspective → set Item // each perspective has a set of items associated with that circle
+```
+
+### API Routes
+
+#### ```POST /api/perspective``` - Creates a new perspective
+
+**Body**
+- ```name``` _string_ - the name of the perspective
+- ```event``` _string_ - the event associated with the perspective
+- ```permission``` _Permission_ - the viewing/writing permissions of the perspective
+
+**Returns**
+- An object with the created perspective
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```409``` if ```name``` already exists
+
+#### ```GET /api/perspective/?perspective``` - Gets all freets from ```perspective```
+
+**Returns**
+- An array of freets that are in ```perspectiveId```
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the perspective
+- ```404``` if ```perspective``` is invalid
+
+#### ```POST /api/perspective/?perspective/?freetId``` - Adds freet associated with ```freetId``` to the perspective
+
+**Returns**
+- An object with the updated perspective
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the perspective
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```freetId``` is invalid
+- ```404``` if ```perspective``` is invalid
+
+#### ```DELETE /api/perspective/?perspective/?freetId``` - Removes freet associated with ```freetId``` to the perspective
+
+**Returns**
+- An object with the updated perspective
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` does not have ```permission``` to view the perspective
+- ```403``` if ```user``` is not the author of the freet with ID ```freetId```
+- ```404``` if ```freetId``` is invalid
+- ```404``` if ```perspective``` is invalid
+
+
+## Permission [Item]
+```
+- owner: Item → one User // an item is owned by a user that can control permissions
+- status: Item → bool Public // an item can be set to public or private
+- viewers: Item → set User // for each item, the set of users who are allowed to view the item
+- posters: Item → set User // for each item, the set of users who are allowed to add posts to the item
+```
+
+### API Routes
+
+#### ```POST /api/permission``` - Creates a new permission
+
+**Body**
+- ```permissionObject``` _freet, user, circle, perspective_ - Object to set permissions settings for 
+- ```public``` _boolean_ - whether or not the ```permissionObject``` is public or private
+
+**Returns**
+- A success message
+- A object with the set permissions
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the owner of ```permissionObject```
+- ```404``` if ```permissionObject``` is invalid
+
+#### ```PUT /api/permission/?permission``` - Updates permission settings
+
+**Returns**
+- A sucess message 
+- A object with the updated permissions
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the owner of ```permissionObject```
+- ```404``` if ```permissionObject``` is invalid
+
+#### ```POST /api/permission/?permission/?user``` - Adds a user to ```permission```
+
+**Returns**
+- A success message
+- An object with the updated permissions on permissionObject
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the owner of ```permissionObject```
+- ```404``` if ```permissionObject``` is invalid
+- ```404``` if ```permission``` is invalid
+
+#### ```DELETE /api/permission/?permission/?user``` - Removes a user from ```permission```
+
+**Returns**
+- A success message
+- An object with the updated permissions on permissionObject
+
+**Throws**
+- ```403``` if ```user``` is not logged in
+- ```403``` if ```user``` is not the owner of ```permissionObject```
+- ```404``` if ```permissionObject``` is invalid
+- ```404``` if ```permission``` is invalid
