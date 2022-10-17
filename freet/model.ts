@@ -1,7 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
-
+import type {Like} from '../like/model'
 /**
  * This file defines the properties stored in a Freet
  * DO NOT implement operations here ---> use collection file
@@ -14,6 +14,7 @@ export type Freet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  likes: Set<Like>;
 };
 
 export type PopulatedFreet = {
@@ -49,6 +50,10 @@ const FreetSchema = new Schema<Freet>({
   dateModified: {
     type: Date,
     required: true
+  },
+  likes: {
+    type: Set<Like>,
+    required: false
   }
 });
 

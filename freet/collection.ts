@@ -12,6 +12,7 @@ import UserCollection from '../user/collection';
  * and contains all the information in Freet. https://mongoosejs.com/docs/typescript.html
  */
 class FreetCollection {
+    
   /**
    * Add a freet to the collection
    *
