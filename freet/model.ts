@@ -23,6 +23,7 @@ export type PopulatedFreet = {
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  likes: Set<Like>
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table

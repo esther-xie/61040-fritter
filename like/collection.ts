@@ -45,19 +45,6 @@ class LikeCollection {
     return like !== null;
   }
 
-  /**
-   * Check to see if a user liked a freet
-   * 
-   * @param {string} userId 
-   * @param {string} freetId
-   * @return {Promise<Boolean>} - true if the like has been removed, false otherwise
-   */
-   static async findLike(userId: Types.ObjectId | string, freetId: Types.ObjectId | string): Promise<Boolean> {
-    const freet = await FreetModel.findOne({_id: freetId});
-    const like = LikeModel.findOne({userId: userId, freetId: freetId});
-    return Boolean(like);
-  }
-
    /**
    * Get all users who liked a Freet
    * 
@@ -77,6 +64,20 @@ class LikeCollection {
   static async findLikedFreets(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Like>>> {
     return LikeModel.find({userId: userId}).populate('userId');  
   }
+
+   /**
+   * Check to see if a user liked a freet
+   * 
+   * @param {string} userId 
+   * @param {string} freetId
+   * @return {Promise<Boolean>} - true if the like has been removed, false otherwise
+   */
+     static async findLike(userId: Types.ObjectId | string, freetId: Types.ObjectId | string): Promise<Boolean> {
+        const freet = await FreetModel.findOne({_id: freetId});
+        const like = LikeModel.findOne({userId: userId, freetId: freetId});
+        return Boolean(like);
+      }
+    
 
 }
 

@@ -1,6 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
-
+import type {User} from '../user/model';
+import type {Freet} from '../freet/model';
 /**
  * This file defines the properties stored in a Freet
  * DO NOT implement operations here ---> use collection file
@@ -13,6 +14,12 @@ export type Like = {
   freetId: Types.ObjectId; // id of the freet
 };
 
+export type PopulatedLike = {
+    _id: Types.ObjectId;
+    userId: User;
+    freetId: Freet;
+  };
+
 // Mongoose schema definition for interfacing with a MongoDB table
 // Likes stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
@@ -21,12 +28,14 @@ const LikeSchema = new Schema<Like>({
   userId: {
     // Use Types.ObjectId outside of the schema
     type: Schema.Types.ObjectId,
-    required: true
+    required: true,
+    ref: 'User'
   },
   // The date the freet was created
   freetId: {
     // Use Types.ObjectId outside of the schema
     type: Schema.Types.ObjectId,
+    ref: 'Freet',
     required: true
   }
 });
